@@ -1,0 +1,58 @@
+
+start:
+make directory
+install pipenv, django 
+    pipenv install
+    pipenv install django
+check version
+    pipenv run python -m django --version
+view django admin commands
+    pipenv run django-admin 
+create project
+    pipenv run django-admin startproject blog_django_project
+
+fileoverview:
+blog_django_project
+    __init__.py 
+    settings.py (settings)
+    urls.py (url routing)
+    wsgi.py (how our python web app and the web server communicate (not touching))
+manage.py (file that allows us to run command line commands (no changes to be made))
+
+start server 
+    pipenv run python manage.py runserver 
+
+create app
+    pipenv run python manage.py startapp blog 
+
+
+open views.py 
+    from django.http import HttpResponse 
+create a home function 
+(going to handle the traffic from the home page of our blog)
+(going to take in a request argument and return what we want the user to see when they're sent to this route)
+(this is where the logic goes for how we want to handle certain routes)
+    def home(request):
+        return HttpResponse('<h1>Blog Home</h1>')
+(need to map URL pattern to this view function)
+create a new bot module in our blog directory called urls.py and in that file is where we'll map the urls that we want to correspond to each view function
+open this urls.py 
+    from django.urls import path 
+
+    urlpatterns = [
+        path('', views.home, name='blog-home'),
+    ]
+
+
+
+
+
+
+
+Admin:
+spencermlim
+spencer.m.lim@gmail.com
+sp*********m
+
+TestUser
+testing321
