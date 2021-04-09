@@ -6,15 +6,16 @@
         <div class="article-metadata">
             <a class="mr-2" href="{% url 'user-posts' object.author.username %}">{{ object.author }}</a>
             <small class="text-muted">{{ object.date_posted|date:"F d, Y g:iA e" }}</small>
-            {% if object.author == user %}
+        </div>
+        <!--<span class="article-title" style="font-size: 25px; font-weight:bold">{{ object.title }}</span> <span style="font-size: 15px;">({{ object.category }})</span>-->
+        <span><a class="article-title" style="font-size: 25px; font-weight:bold" href="{% url 'post-detail' post.id %}">{{ object.title }}</a></span> <span><a style="font-size: 15px;" href="{% url 'category' post.category %}">({{ object.category }})</a></span>
+        <p class="article-content">{{ object.content }}</p>
+        {% if object.author == user %}
             <div>
                 <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'post-update' object.id %}">Update</a>
                 <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'post-delete' object.id %}">Delete</a>
             </div>
-            {% endif %}
-        </div>
-        <h2 class="article-title">{{ object.title }}</h2>
-        <p class="article-content">{{ object.content }}</p>
+        {% endif %}
         </div>
     </article>
 {% endblock content %} 
