@@ -2,8 +2,13 @@ from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User 
-from .models import Post 
+from .models import Post, Category
 
+
+# category_choices = Category.objects.all().values_list('name', 'name')
+# choice_list = []
+# for item in category_choices:
+#     choice_list.append(item)
 
 # Create your views here.
 def home(request):
@@ -19,6 +24,24 @@ class PostListView(ListView):
     context_object_name = 'posts'
     ordering = ['-date_posted']
     paginate_by = 5
+
+# View list of posts of selected category
+def CategoryListView(request, cats):
+    category_posts = Post.objects.filter(category=cats)
+    return render(request, 'blog/category_list.html', {'cats': cats.title(), 'category_posts':category_posts})
+
+# View list of all categories within app
+def CategoriesView(request):
+    context = {
+        'categories': Category.objects.all()
+    }
+    return render(request, 'blog/categories.html', context)
+
+# View to add new category
+class AddCategoryView(CreateView):
+    model = Category
+    template_name = 'blog/add_category.html'
+    fields = '__all__'
 
 
 class UserPostListView(ListView):
@@ -38,7 +61,7 @@ class PostDetailView(DetailView):
 
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
-    fields = ['title', 'content']
+    fields = ['title', 'category', 'content']
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -47,7 +70,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
 
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post
-    fields = ['title', 'content']
+    fields = ['title', 'category', 'content']
 
     def form_valid(self, form):
         form.instance.author = self.request.user
