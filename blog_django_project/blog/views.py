@@ -25,15 +25,19 @@ class PostListView(ListView):
     ordering = ['-date_posted']
     paginate_by = 5
 
-
+# View list of posts of selected category
 def CategoryListView(request, cats):
     category_posts = Post.objects.filter(category=cats)
     return render(request, 'blog/category_list.html', {'cats': cats.title(), 'category_posts':category_posts})
 
-# def CategoriesView(request):
-#     categories = Category.objects.filter(name)
-#     return render(request, 'blog/categories.html')
+# View list of all categories within app
+def CategoriesView(request):
+    context = {
+        'categories': Category.objects.all()
+    }
+    return render(request, 'blog/categories.html', context)
 
+# View to add new category
 class AddCategoryView(CreateView):
     model = Category
     template_name = 'blog/add_category.html'

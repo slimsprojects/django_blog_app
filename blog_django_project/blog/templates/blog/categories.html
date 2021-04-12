@@ -1,5 +1,9 @@
 {% extends "blog/base.html" %}
 {% block content %}
     <h1>Categories:</h1>
+
+    {% for category in categories %}
+        <a class="list-group-item list-group-item-light" href="{% url 'category' category.name %}">{{ category.name }}</a>
+    {% endfor %}
     
 {% endblock content %} 

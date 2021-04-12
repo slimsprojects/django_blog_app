@@ -11,7 +11,7 @@ class Category(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return reverse('post-detail', kwargs={'pk':self.pk})
+        return reverse('categories')
 
 class Post(models.Model):
     title = models.CharField(max_length=100)
