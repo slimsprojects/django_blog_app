@@ -3,6 +3,9 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User 
 from .models import Post, Category
+# from django import forms
+# from django.forms import ModelForm
+# from crispy_forms.helper import FormHelper
 
 
 # category_choices = Category.objects.all().values_list('name', 'name')
@@ -61,7 +64,8 @@ class PostDetailView(DetailView):
 
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
-    fields = ['title', 'category', 'content']
+    fields = ['title', 'category','content']
+    #category = forms.ChoiceField(choices=choice_list)
 
     def form_valid(self, form):
         form.instance.author = self.request.user
