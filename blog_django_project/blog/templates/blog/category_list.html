@@ -3,9 +3,9 @@
     
     {% if category_posts %}
 
-        <h1>Category: {{ cats }}</h1>
-
-        {% for post in category_posts %}
+        <h1 id="home-fonts" style="font-size: 1.2em;">Category: <big style="font-size: 1.5em;">{{ cats }}</big></h1>
+        <body id="home-fonts">Posts:{{ page_obj.paginator.count }}</body> 
+        {% for post in page_obj %}
             <article class="media content-section">
                 <img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}">
                 <div class="media-body">
@@ -17,9 +17,19 @@
                 <p class="article-content">{{ post.content }}</p>
                 </div>
             </article>
-        {% endfor %} 
+        {% endfor %}
+    
+    {% else %}
+        <h1 id="home-fonts" style="font-size: 1.2em;">Category: <big style="font-size: 1.5em;">{{ cats }}</big></h1>
+        <body id="home-fonts">Posts:{{ page_obj.paginator.count }}</body>
+        <h2 id="home-fonts">Sorry:</h2>
+        <h4 id="home-fonts"> If this category is in View Categories then there are no posts within this category yet.</h4>
+        <h4 id="home-fonts"> If this category is not in View Categories then it does not exist yet (Login and Add Category).</h4>
+            
+    {% endif %}
 
-        {% if is_paginated %}
+    <div class="pagination">
+        <span class="step-links">
             {% if page_obj.has_previous %}
                 <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
                 <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}">Previous</a>
@@ -37,12 +47,8 @@
                 <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}">Next</a>
                 <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
             {% endif %}
-        {% endif %}
-    
-    {% else %}
-            <h2>Sorry:</h2>
-            <h4> If this category exist (check View Categories) then there are no posts within this category yet.</h4>
-            <h4> If this category is not in View Categories then this category does not exist yet (add by going to Add Category).</h4>
-    {% endif %}
+        </span>
+    </div>
+
 
 {% endblock content %} 
