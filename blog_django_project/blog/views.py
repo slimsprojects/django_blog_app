@@ -3,6 +3,10 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User 
 from .models import Post, Category
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+# from django import forms
+# from django.forms import ModelForm
+# from crispy_forms.helper import FormHelper
 
 
 # category_choices = Category.objects.all().values_list('name', 'name')
@@ -25,10 +29,15 @@ class PostListView(ListView):
     ordering = ['-date_posted']
     paginate_by = 5
 
-# View list of posts of selected category
+#View list of posts of selected category
 def CategoryListView(request, cats):
-    category_posts = Post.objects.filter(category=cats)
-    return render(request, 'blog/category_list.html', {'cats': cats.title(), 'category_posts':category_posts})
+    category_posts = Post.objects.filter(category=cats).order_by('-date_posted')
+
+    paginator = Paginator(category_posts, 5)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'blog/category_list.html', {'cats': cats.title(), 'category_posts':category_posts, 'page_obj':page_obj})
 
 # View list of all categories within app
 def CategoriesView(request):
@@ -61,7 +70,8 @@ class PostDetailView(DetailView):
 
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
-    fields = ['title', 'category', 'content']
+    fields = ['title', 'category','content']
+    #category = forms.ChoiceField(choices=choice_list)
 
     def form_valid(self, form):
         form.instance.author = self.request.user
