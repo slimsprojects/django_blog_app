@@ -9,11 +9,6 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 # from crispy_forms.helper import FormHelper
 
 
-# category_choices = Category.objects.all().values_list('name', 'name')
-# choice_list = []
-# for item in category_choices:
-#     choice_list.append(item)
-
 # Create your views here.
 def home(request):
     context = {
@@ -29,6 +24,13 @@ class PostListView(ListView):
     ordering = ['-date_posted']
     paginate_by = 5
 
+    # figure out how to use with function based views (only works with class based)
+    def get_context_data(self, *args, **kwargs):
+        cat_menu = Category.objects.all()
+        context = super(PostListView, self).get_context_data(*args, **kwargs)
+        context["cat_menu"] = cat_menu
+        return context 
+
 #View list of posts of selected category
 def CategoryListView(request, cats):
     category_posts = Post.objects.filter(category=cats).order_by('-date_posted')
@@ -37,13 +39,17 @@ def CategoryListView(request, cats):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    return render(request, 'blog/category_list.html', {'cats': cats.title(), 'category_posts':category_posts, 'page_obj':page_obj})
+    cat_menu = Category.objects.all()
+
+    return render(request, 'blog/category_list.html', {'cats': cats.title(), 'category_posts':category_posts, 'page_obj':page_obj, 'cat_menu':cat_menu})
 
 # View list of all categories within app
 def CategoriesView(request):
     context = {
-        'categories': Category.objects.all()
+        'categories': Category.objects.all(),
+        'cat_menu': Category.objects.all()
     }
+
     return render(request, 'blog/categories.html', context)
 
 # View to add new category
@@ -51,6 +57,13 @@ class AddCategoryView(CreateView):
     model = Category
     template_name = 'blog/add_category.html'
     fields = '__all__'
+
+    ##
+    def get_context_data(self, *args, **kwargs):
+        cat_menu = Category.objects.all()
+        context = super(AddCategoryView, self).get_context_data(*args, **kwargs)
+        context["cat_menu"] = cat_menu
+        return context 
 
 
 class UserPostListView(ListView):
@@ -63,9 +76,23 @@ class UserPostListView(ListView):
         user = get_object_or_404(User, username=self.kwargs.get('username'))
         return Post.objects.filter(author=user).order_by('-date_posted')
 
+    ##
+    def get_context_data(self, *args, **kwargs):
+        cat_menu = Category.objects.all()
+        context = super(UserPostListView, self).get_context_data(*args, **kwargs)
+        context["cat_menu"] = cat_menu
+        return context 
+
 
 class PostDetailView(DetailView):
     model = Post
+
+    ##
+    def get_context_data(self, *args, **kwargs):
+        cat_menu = Category.objects.all()
+        context = super(PostDetailView, self).get_context_data(*args, **kwargs)
+        context["cat_menu"] = cat_menu
+        return context 
 
 
 class PostCreateView(LoginRequiredMixin, CreateView):
@@ -76,6 +103,13 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
+
+    ##
+    def get_context_data(self, *args, **kwargs):
+        cat_menu = Category.objects.all()
+        context = super(PostCreateView, self).get_context_data(*args, **kwargs)
+        context["cat_menu"] = cat_menu
+        return context 
 
 
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
@@ -92,6 +126,13 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             return True
         return False 
 
+    ##
+    def get_context_data(self, *args, **kwargs):
+        cat_menu = Category.objects.all()
+        context = super(PostUpdateView, self).get_context_data(*args, **kwargs)
+        context["cat_menu"] = cat_menu
+        return context 
+
 
 class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Post
@@ -101,10 +142,19 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         post = self.get_object()
         if self.request.user == post.author:
             return True
-        return False 
+        return False
+    
+    ##
+    def get_context_data(self, *args, **kwargs):
+        cat_menu = Category.objects.all()
+        context = super(PostDeleteView, self).get_context_data(*args, **kwargs)
+        context["cat_menu"] = cat_menu
+        return context 
 
 
 def about(request):
-    return render(request, 'blog/about.html', {'title':'About'})
+    cat_menu = Category.objects.all()
+
+    return render(request, 'blog/about.html', {'title':'About', 'cat_menu':cat_menu})
 
 

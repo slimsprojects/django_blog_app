@@ -3,6 +3,8 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
 
+from blog.models import Category
+
 # Create your views here.
 def register(request):
     if request.method == 'POST':
@@ -14,6 +16,7 @@ def register(request):
             return redirect('login')
     else:
         form = UserRegisterForm()
+        
     return render(request, 'users/register.html', {'form': form})
 
 
@@ -32,9 +35,12 @@ def profile(request):
         u_form = UserUpdateForm(instance=request.user)
         p_form = ProfileUpdateForm(instance=request.user.profile)
 
+    cat_menu = Category.objects.all()
+
     context = {
         'u_form': u_form,
-        'p_form': p_form
+        'p_form': p_form,
+        'cat_menu': cat_menu,
     }
 
     return render(request, 'users/profile.html', context)

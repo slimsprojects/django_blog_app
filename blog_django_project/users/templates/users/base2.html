@@ -69,51 +69,8 @@
                 {% endif %}
                 {% block content %}{% endblock %}
             </div>
-            <div class="col-md-4">
-                <div class="content-section">
-                    <h5 id="home-fonts">Sidebar</h5>
-                    <!--<p class='text-muted'>You can put any information here you'd like</p>-->
-                    <p>
-                        <ul class="list-group">
-                          {% if user.is_authenticated %}
-                            <a id="home-fonts" class="list-group-item list-group-item-light" href="{% url 'post-create' %}">New Post</a>
-                            <a id="home-fonts" class="list-group-item list-group-item-light" href="{% url 'add-category' %}">Add Category</a>
-                            <!-- <a id="home-fonts" class="list-group-item list-group-item-light" href="{% url 'categories' %}">View Categories</a> -->
-
-                            <div class="dropdown show">
-                              <a id="home-fonts" class="dropdown-toggle list-group-item list-group-item-light" href="#" role="button" id="dropdownMenuLink; home-fonts" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                View Categories
-                              </a>
-                              <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                {% for item in cat_menu %}
-                                  <a id="home-fonts" class="dropdown-item" href="{% url 'category' item %}">{{ item }}</a>
-                                {% endfor %}
-                              </div>
-                            </div>
-
-                          {% else %}
-                            <div class="dropdown show">
-                              <a id="home-fonts" class="dropdown-toggle list-group-item list-group-item-light" href="#" role="button" id="dropdownMenuLink; home-fonts" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                View Categories
-                              </a>
-                              <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                {% for item in cat_menu %}
-                                  <a id="home-fonts" class="dropdown-item" href="{% url 'category' item %}">{{ item }}</a>
-                                {% endfor %}
-                              </div>
-                            </div>
-                          {% endif %}
-                            <!--
-                            <li class="list-group-item list-group-item-light">Calendars</li>
-                            <li class="list-group-item list-group-item-light">etc</li>
-                            -->
-                        </ul>
-                    </p>
-                </div>
-            </div>
         </div>
     </main>
-
     
     
     <!-- Optional JavaScript/ Bootstrap Bundle with Popper -->
