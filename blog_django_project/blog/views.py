@@ -16,13 +16,13 @@ def home(request):
     }
     return render(request, 'blog/home.html', context)
 
-
+# Home View/ Main TL post View
 class PostListView(ListView):
     model = Post
     template_name ='blog/home.html' # <app>/<model>_<viewtype>.html
     context_object_name = 'posts'
     ordering = ['-date_posted']
-    paginate_by = 5
+    paginate_by = 7
 
     # figure out how to use with function based views (only works with class based)
     def get_context_data(self, *args, **kwargs):
@@ -31,7 +31,7 @@ class PostListView(ListView):
         context["cat_menu"] = cat_menu
         return context 
 
-#View list of posts of selected category
+# View list of posts of selected category
 def CategoryListView(request, cats):
     category_posts = Post.objects.filter(category=cats).order_by('-date_posted')
 
@@ -66,6 +66,7 @@ class AddCategoryView(CreateView):
         return context 
 
 
+# View for Posts by User
 class UserPostListView(ListView):
     model = Post
     template_name ='blog/user_posts.html' 
@@ -84,6 +85,27 @@ class UserPostListView(ListView):
         return context 
 
 
+# View for Posts of Current Profile
+def ProfilePostListView(request):
+    user = request.user
+    profile_posts = Post.objects.filter(author=user).order_by('-date_posted')
+    paginator = Paginator(profile_posts, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    cat_menu = Category.objects.all()
+
+    my_cats = []
+    for post in profile_posts:
+        if post.category in my_cats:
+            pass
+        else:
+            my_cats.append(post.category)
+
+    return render(request, 'blog/profile.html', {'user':user, 'profile_posts':profile_posts, 'page_obj':page_obj, 'cat_menu':cat_menu, 'my_cats':my_cats})
+
+
+# View for Detail View of Post
 class PostDetailView(DetailView):
     model = Post
 
@@ -95,6 +117,7 @@ class PostDetailView(DetailView):
         return context 
 
 
+# View to Create New Post
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
     fields = ['title', 'category','content']
@@ -112,6 +135,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
         return context 
 
 
+# View to Update Post
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post
     fields = ['title', 'category', 'content']
@@ -134,6 +158,7 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return context 
 
 
+# View to Delete Post
 class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Post
     success_url = '/'
@@ -152,6 +177,7 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return context 
 
 
+# View About Page
 def about(request):
     cat_menu = Category.objects.all()
 
