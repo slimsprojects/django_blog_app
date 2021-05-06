@@ -105,6 +105,26 @@ def ProfilePostListView(request):
     return render(request, 'blog/profile.html', {'user':user, 'profile_posts':profile_posts, 'page_obj':page_obj, 'cat_menu':cat_menu, 'my_cats':my_cats})
 
 
+# View for Profile Posts by category
+def ProfileCategoryListView(request, cats):
+    prof_category_posts = Post.objects.filter(author=request.user, category=cats).order_by('-date_posted')
+    profile_posts = Post.objects.filter(author=request.user).order_by('-date_posted')
+
+    paginator = Paginator(prof_category_posts, 5)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    cat_menu = Category.objects.all()
+
+    my_cats = []
+    for post in profile_posts:
+        if post.category in my_cats:
+            pass
+        else:
+            my_cats.append(post.category)
+
+    return render(request, 'blog/prof_cat_list.html', {'cats': cats.title(), 'prof_category_posts':prof_category_posts, 'page_obj':page_obj, 'cat_menu':cat_menu, 'my_cats':my_cats})
+
 # View for Detail View of Post
 class PostDetailView(DetailView):
     model = Post
@@ -121,7 +141,6 @@ class PostDetailView(DetailView):
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
     fields = ['title', 'category','content']
-    #category = forms.ChoiceField(choices=choice_list)
 
     def form_valid(self, form):
         form.instance.author = self.request.user

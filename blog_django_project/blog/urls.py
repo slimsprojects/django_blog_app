@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import PostListView, PostDetailView, PostCreateView, PostUpdateView, PostDeleteView, UserPostListView, CategoryListView, AddCategoryView, CategoriesView, ProfilePostListView
+from .views import PostListView, PostDetailView, PostCreateView, PostUpdateView, PostDeleteView, UserPostListView, CategoryListView, AddCategoryView, CategoriesView, ProfilePostListView, ProfileCategoryListView
 from . import views 
 
 urlpatterns = [
@@ -15,4 +15,5 @@ urlpatterns = [
     path('about/', views.about, name='blog-about'),
 
     path('profile/', ProfilePostListView, name='profile'),
+    path('profile/<str:cats>/', ProfileCategoryListView, name='profile-cat'),
 ]

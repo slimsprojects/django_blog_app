@@ -1,7 +1,6 @@
 {% extends "blog/base.html" %}
 {% block content %}
-
-    {% if profile_posts %}
+    {% if prof_category_posts %}
 
         <div>
             <h4 id="home-fonts" style="font-size: 1.4em;" class="mb-3">{{ user }} <small style="font-size: 0.75em;">Posts:{{ page_obj.paginator.count }}</small></h4>
@@ -11,6 +10,7 @@
                     <a id="home-fonts" href="{% url 'profile-cat' cat %}">({{ cat }})</a>
                 {% endfor %}
             </div>
+            <p id="home-fonts">Selected:{{cats}}</p>
             <a id="home-fonts" class="btn btn-info mb-4" href="{% url 'edit-profile' %}">Edit Profile</a>
         </div>
 
@@ -27,7 +27,7 @@
                 </div>
             </article>
         {% endfor %}
-    
+
     {% endif %}
 
     <div class="pagination">
@@ -52,4 +52,5 @@
         </span>
     </div>
 
-{% endblock content %} 
+
+{% endblock content%}
