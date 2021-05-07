@@ -21,7 +21,7 @@ def register(request):
 
 
 @login_required
-def profile(request):
+def edit_profile(request):
     if request.method == 'POST':
         u_form = UserUpdateForm(request.POST, instance=request.user)
         p_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.profile)
@@ -43,4 +43,4 @@ def profile(request):
         'cat_menu': cat_menu,
     }
 
-    return render(request, 'users/profile.html', context)
+    return render(request, 'users/edit_profile.html', context)
