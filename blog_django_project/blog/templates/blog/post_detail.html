@@ -9,6 +9,9 @@
             </div>
             <!--<span class="article-title" style="font-size: 25px; font-weight:bold">{{ object.title }}</span> <span style="font-size: 15px;">({{ object.category }})</span>-->
             <span><a id="home-fonts" class="article-title" style="font-size: 25px; font-weight:bold" href="{% url 'post-detail' post.id %}">{{ object.title }}</a></span> <span><a style="font-size: 15px;" href="{% url 'category' post.category %}">({{ object.category }})</a></span>
+            {% if post.header_image %}
+                <img src="{{ post.header_image.url }}">
+            {% endif %}
             <p id="home-fonts" class="article-content">{{ object.content }}</p>
             <hr>
 

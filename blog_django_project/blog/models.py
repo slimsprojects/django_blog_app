@@ -20,6 +20,7 @@ class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     category = models.CharField(max_length=100, default='none')
     likes = models.ManyToManyField(User, related_name='blog_posts')
+    header_image = models.ImageField(null=True, blank=True, upload_to="images/")
 
     def __str__(self):
         return self.title

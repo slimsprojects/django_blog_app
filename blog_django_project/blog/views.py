@@ -174,7 +174,7 @@ class PostDetailView(DetailView):
 # View to Create New Post
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
-    fields = ['title', 'category','content']
+    fields = ['title', 'category','content', 'header_image']
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -191,7 +191,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
 # View to Update Post
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post
-    fields = ['title', 'category', 'content']
+    fields = ['title', 'category', 'content', 'header_image']
 
     def form_valid(self, form):
         form.instance.author = self.request.user
