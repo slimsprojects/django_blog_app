@@ -5,7 +5,7 @@
 
         <div>
             <h4 id="home-fonts" style="font-size: 1.4em;" class="mb-3">{{ user }} <small style="font-size: 0.75em;">Posts:{{ page_obj.paginator.count }}</small></h4>
-            <div id="home-fonts">Categories:
+            <div id="home-fonts">My Categories:
                 <a id="home-fonts" href="{% url 'profile' %}">(all)</a>
                 {% for cat in my_cats %}
                     <a id="home-fonts" href="{% url 'profile-cat' cat %}">({{ cat }})</a>

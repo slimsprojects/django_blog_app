@@ -1,0 +1,14 @@
+Report Button:
+
+report button will open a popup report form 
+
+view
+    ReportView
+        refer to LikeView
+        add report form 
+url
+    refer to LikeView url 
+template
+    post-detail
+        form button 
+        bottom right side
