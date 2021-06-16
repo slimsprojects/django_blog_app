@@ -4,6 +4,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User 
 from .models import Post, Category
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.http import HttpResponseRedirect
+from django.urls import reverse, reverse_lazy
 # from django import forms
 # from django.forms import ModelForm
 # from crispy_forms.helper import FormHelper
@@ -125,6 +127,28 @@ def ProfileCategoryListView(request, cats):
 
     return render(request, 'blog/prof_cat_list.html', {'cats': cats.title(), 'prof_category_posts':prof_category_posts, 'page_obj':page_obj, 'cat_menu':cat_menu, 'my_cats':my_cats})
 
+
+# View for liking post
+def LikeView(request, pk):
+    post = get_object_or_404(Post, id=request.POST.get('post_id'))
+    liked_var = False 
+    if post.likes.filter(id=request.user.id).exists():
+        post.likes.remove(request.user)
+        liked_var = False 
+    else:
+        post.likes.add(request.user)
+        liked_var = True
+
+    return HttpResponseRedirect(reverse('post-detail', args=[str(pk)]))
+
+
+# View for reporting post
+def ReportView(request, pk):
+    post = get_object_or_404(Post, id=request.POST.get('post_id'))
+
+    return HttpResponseRedirect(reverse('post-detail', args=[str(pk)]))
+
+
 # View for Detail View of Post
 class PostDetailView(DetailView):
     model = Post
@@ -134,6 +158,16 @@ class PostDetailView(DetailView):
         cat_menu = Category.objects.all()
         context = super(PostDetailView, self).get_context_data(*args, **kwargs)
         context["cat_menu"] = cat_menu
+
+        total_like_var = get_object_or_404(Post, id=self.kwargs['pk'])
+        total_likes = total_like_var.total_likes()
+        context["total_likes"] = total_likes
+
+        liked_var = False
+        if total_like_var.likes.filter(id=self.request.user.id).exists():
+            liked_var = True
+        context["liked_var"] = liked_var
+
         return context 
 
 

@@ -3,19 +3,53 @@
     <article class="media content-section">
         <img class="rounded-circle article-img" src="{{ object.author.profile.image.url }}">
         <div class="media-body">
-        <div class="article-metadata">
-            <a id="home-fonts" class="mr-2" href="{% url 'user-posts' object.author.username %}">{{ object.author }}</a>
-            <small id="home-fonts" class="text-muted">{{ object.date_posted|date:"F d, Y g:iA e" }}</small>
-        </div>
-        <!--<span class="article-title" style="font-size: 25px; font-weight:bold">{{ object.title }}</span> <span style="font-size: 15px;">({{ object.category }})</span>-->
-        <span><a id="home-fonts" class="article-title" style="font-size: 25px; font-weight:bold" href="{% url 'post-detail' post.id %}">{{ object.title }}</a></span> <span><a style="font-size: 15px;" href="{% url 'category' post.category %}">({{ object.category }})</a></span>
-        <p id="home-fonts" class="article-content">{{ object.content }}</p>
-        {% if object.author == user %}
-            <div>
-                <a id="home-fonts" class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'post-update' object.id %}">Update</a>
-                <a id="home-fonts" class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'post-delete' object.id %}">Delete</a>
+            <div class="article-metadata">
+                <a id="home-fonts" class="mr-2" href="{% url 'user-posts' object.author.username %}">{{ object.author }}</a>
+                <small id="home-fonts" class="text-muted">{{ object.date_posted|date:"F d, Y g:iA e" }}</small>
             </div>
-        {% endif %}
+            <!--<span class="article-title" style="font-size: 25px; font-weight:bold">{{ object.title }}</span> <span style="font-size: 15px;">({{ object.category }})</span>-->
+            <span><a id="home-fonts" class="article-title" style="font-size: 25px; font-weight:bold" href="{% url 'post-detail' post.id %}">{{ object.title }}</a></span> <span><a style="font-size: 15px;" href="{% url 'category' post.category %}">({{ object.category }})</a></span>
+            <p id="home-fonts" class="article-content">{{ object.content }}</p>
+            <hr>
+
+            {% if user.is_authenticated %}
+                <div>
+                    {% if liked_var %}
+                        <form id="home-fonts" action="{% url 'like-post' post.pk %}" method="POST">
+                            {% csrf_token %}
+                            <button id="home-fonts" type="submit", name="post_id", value="{{ post.id }}", class="btn btn-outline-secondary btn-sm">Unlike</button>
+                            {% if total_likes == 1 %}
+                            - {{ total_likes }} Like
+                            {% else %}
+                            - {{ total_likes }} Likes 
+                            {% endif %}
+                        </form>
+                    {% else %}
+                        <form id="home-fonts" action="{% url 'like-post' post.pk %}" method="POST">
+                            {% csrf_token %}
+                            <button id="home-fonts" type="submit", name="post_id", value="{{ post.id }}", class="btn btn-primary btn-sm">Like</button>
+                            {% if total_likes == 1 %}
+                            - {{ total_likes }} Like
+                            {% else %}
+                            - {{ total_likes }} Likes 
+                            {% endif %}
+                        </form>
+                    {% endif %}
+                </div>
+            {% else %}
+                {% if total_likes == 1 %}
+                - {{ total_likes }} Like
+                {% else %}
+                - {{ total_likes }} Likes 
+                {% endif %}
+            {% endif %}
+            
+            {% if object.author == user %}
+                <div>
+                    <a id="home-fonts" class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'post-update' object.id %}">Update</a>
+                    <a id="home-fonts" class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'post-delete' object.id %}">Delete</a>
+                </div>
+            {% endif %}
         </div>
     </article>
 {% endblock content %} 
